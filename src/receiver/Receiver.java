@@ -33,6 +33,8 @@ public class Receiver {
 						sendData(rcvBase);
 						System.out.println("<--- ACK" + rcvBase + " 송신");
 					}
+				} else {
+					System.out.println("== 패킷" + firstPacket + "은 rcvWind 범위 밖 ==");
 				}
 			}
 		} catch (Exception e) {
