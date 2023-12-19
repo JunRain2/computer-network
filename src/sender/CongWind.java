@@ -13,7 +13,7 @@ public class CongWind {
 	private int count = 1;
 
 	public CongWind() {
-		this.size = 1;
+		this.size = 9;
 		this.criticalPoint = 0;
 	}
 
@@ -21,28 +21,34 @@ public class CongWind {
 		return criticalPoint;
 	}
 
-	public void linearIncrease(int tmp) {
-		size += tmp;
+	public void linearIncrease() {
+		size += count;
+		count++;
 	}
 
-	public void exponentialIncrease(int tmp) {
+	public void exponentialIncrease() {
 		size += Math.pow(2, count++);
+	}
+
+	public int getCount() {
+		return count;
 	}
 
 	// timeOut 발생시
 	public void slowStart() {
-		criticalPoint = size / 2;
+		criticalPoint = (int)Math.ceil((double)size/2);
 		size = 1;
 		count = 1;
 	}
 
 	// 3Dup 발생시
 	public void fastRecovery() {
-		criticalPoint = size / 2;
+		criticalPoint = (int)Math.ceil((double)size/2);
 		size = criticalPoint + 3;
+		count = 1;
 	}
 
-	// 전송할 때 Packet을 추가
+	// Packet을 추가
 	public void addPacket(int number) {
 		Packet packet = new Packet(number);
 		packetList.add(packet);
@@ -59,7 +65,7 @@ public class CongWind {
 		if (packet.isDuplicatedAck()) {
 			packet.setDuplicatedAck();
 			Packet resendPacket = packetList.stream()
-				.filter((p) -> number + 1 == p.getNumber())
+				.filter((p) -> number < p.getNumber())
 				.findFirst().get();
 
 			resendPacket.setResendByDuplicatedAck();
@@ -92,5 +98,15 @@ public class CongWind {
 
 	public Queue<Packet> getTimeoutList() {
 		return timeoutList;
+	}
+
+	public void timerReset() {
+		packetList.stream()
+			.forEach(Packet::timerReset);
+	}
+
+	public void reset() {
+		timerReset();
+		packetList = new ArrayList<>();
 	}
 }

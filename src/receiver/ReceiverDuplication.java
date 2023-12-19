@@ -5,7 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-public class Receiver {
+public class ReceiverDuplication {
 	private static final String SENDER_HOST = "localhost";
 	private static final Integer SENDER_PORT = 8001;
 	private static final Integer RECEIVER_PORT = 8002;
@@ -14,30 +14,46 @@ public class Receiver {
 	public static void main(String[] args) {
 		// 최근 보낸 ack
 		int rcvBase = 99;
-		while (true) {
 			try {
 				int firstPacket = receiveDate();
 				System.out.println("----------> 패킷 " + firstPacket + " 수신");
 
+				if (rcvBase < firstPacket) {
+					rcvBase = firstPacket;
+				}
+
 				int secondPacket = receiveDate();
 				System.out.println("----------> 패킷 " + secondPacket + " 수신");
 
-				if (rcvBase + BUFFER_SIZE > firstPacket) {
+				if (rcvBase < secondPacket) {
 					rcvBase = firstPacket;
-					System.out.println("<--- ACK" + rcvBase + " 송신");
+				}
 
-					if (rcvBase + BUFFER_SIZE > secondPacket) {
-						rcvBase = secondPacket;
-						sendData(rcvBase);
-					} else {
-						sendData(rcvBase);
-						System.out.println("<--- ACK" + rcvBase + " 송신");
+				sendData(rcvBase);
+
+				System.out.println("<--- ACK" + rcvBase + " 송신");
+				while (true) {
+					// 데이터를 수신하기
+					firstPacket = receiveDate();
+					System.out.println("----------> 패킷 " + firstPacket + " 수신");
+
+					if (rcvBase < firstPacket) {
+						rcvBase = firstPacket;
 					}
+
+					secondPacket = receiveDate();
+					System.out.println("----------> 패킷 " + secondPacket + " 수신");
+
+					if (rcvBase < secondPacket) {
+						rcvBase = secondPacket;
+					}
+
+					sendData(rcvBase);
+					System.out.println("<--- ACK" + rcvBase + " 송신");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
 	}
 
 	private static void sendData(int data) throws IOException {

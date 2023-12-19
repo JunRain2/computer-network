@@ -48,12 +48,11 @@ public class Packet {
 		if (isAcked() || isDuplicatedAck()) {
 			return;
 		}
-		if (timer == 4) {
+		if (timer == 2) {
 			timeout = true;
 			timer = 0;
 			return;
 		}
-
 		timer++;
 	}
 
@@ -71,5 +70,9 @@ public class Packet {
 
 	public void setDuplicatedAck() {
 		this.duplicatedAck = false;
+	}
+
+	public void timerReset() {
+		this.timer = 0;
 	}
 }
