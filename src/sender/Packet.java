@@ -2,35 +2,74 @@ package sender;
 
 public class Packet {
 	private int number;
-	private int congWind;
 	private int timer;
+	private int ackCount;
+	private boolean duplicatedAck;
+	private boolean resendByDuplicatedAck;
+	private boolean timeout;
 
-	public Packet() {
-		number = 100;
-		congWind = 1;
-	}
-
-	public int getTimer() {
-		return timer;
-	}
-
-	public void setTimer(int timer) {
-		this.timer = timer;
+	public Packet(int number) {
+		this.number = number;
+		reset();
 	}
 
 	public int getNumber() {
 		return number;
 	}
 
-	public void increaseNumber() {
-		this.number++;
+	public void ack() {
+		this.ackCount++;
+		if (ackCount%3 == 0) {
+			duplicatedAck = true;
+		}
 	}
 
-	public int getCongWind() {
-		return congWind;
+	public void accumulateAck() {
+		this.ackCount = 1;
 	}
 
-	public void increaseCongWind() {
-		this.congWind++;
+	public void setResendByDuplicatedAck() {
+		this.resendByDuplicatedAck = true;
+	}
+
+	public void reset() {
+		this.timer = 0;
+		this.ackCount = 0;
+		this.duplicatedAck = false;
+		this.resendByDuplicatedAck = false;
+		this.timeout = false;
+	}
+
+	public boolean isResendByDuplicatedAck() {
+		return resendByDuplicatedAck;
+	}
+
+	public void increaseTimer() {
+		if (isAcked() || isDuplicatedAck()) {
+			return;
+		}
+		if (timer == 4) {
+			timeout = true;
+			timer = 0;
+			return;
+		}
+
+		timer++;
+	}
+
+	public boolean isDuplicatedAck() {
+		return duplicatedAck;
+	}
+
+	public boolean isAcked() {
+		return ackCount == 1;
+	}
+
+	public boolean isTimeout() {
+		return timeout;
+	}
+
+	public void setDuplicatedAck() {
+		this.duplicatedAck = false;
 	}
 }

@@ -11,20 +11,27 @@ public class Receiver {
 	private static final Integer RECEIVER_PORT = 8002;
 
 	public static void main(String[] args) {
-		Ack ack = new Ack();
-		while (ack.getNumber() != 115) {
+		// 최근 보낸 ack
+		int ackNumber = 99;
+		while (ackNumber != 115) {
 			try {
 				// 데이터를 수신하기
-				int receivedMessage = receiveDate();
-				System.out.println("----------> 패킷 " + receivedMessage + " 수신");
+				int firstPacket = receiveDate();
+				System.out.println("----------> 패킷 " + firstPacket + " 수신");
 
-				if (receivedMessage == ack.getNumber() + 1) {
-					ack.increaseNumber();
+				if (ackNumber + 1 == firstPacket) {
+					ackNumber = firstPacket;
 				}
-				sendData(ack.getNumber());
 
-				System.out.println("<--- ACK" + ack.getNumber() + "송신");
+				int secondPacket = receiveDate();
+				System.out.println("----------> 패킷 " + secondPacket + " 수신");
 
+				if (ackNumber + 1 == secondPacket) {
+					ackNumber = secondPacket;
+				}
+
+				sendData(ackNumber);
+				System.out.println("<--- ACK" + ackNumber +" 송신");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
