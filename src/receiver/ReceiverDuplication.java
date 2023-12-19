@@ -9,51 +9,52 @@ public class ReceiverDuplication {
 	private static final String SENDER_HOST = "localhost";
 	private static final Integer SENDER_PORT = 8001;
 	private static final Integer RECEIVER_PORT = 8002;
-	private static final Integer BUFFER_SIZE = 15;
+	private static final Integer BUFFER_SIZE = 20;
 
 	public static void main(String[] args) {
-		// 최근 보낸 ack
-		int rcvBase = 99;
-			try {
+		int rcvBase = 108;
+
+		try {
+			int packet = receiveDate();
+			System.out.println("----------> 패킷 " + packet + " 수신");
+			rcvBase = packet;
+			sendData(rcvBase);
+			System.out.println("<--- ACK" + rcvBase + " 송신");
+
+			packet = receiveDate();
+			System.out.println("----------> 패킷 " + packet + " 수신");
+			sendData(rcvBase);
+			System.out.println("<--- ACK" + rcvBase + " 송신");
+
+			packet = receiveDate();
+			System.out.println("----------> 패킷 " + packet + " 수신");
+			sendData(rcvBase);
+			System.out.println("<--- ACK" + rcvBase + " 송신");
+
+
+			while (true) {
 				int firstPacket = receiveDate();
 				System.out.println("----------> 패킷 " + firstPacket + " 수신");
-
-				if (rcvBase < firstPacket) {
-					rcvBase = firstPacket;
-				}
 
 				int secondPacket = receiveDate();
 				System.out.println("----------> 패킷 " + secondPacket + " 수신");
 
-				if (rcvBase < secondPacket) {
+				if (rcvBase + BUFFER_SIZE > firstPacket) {
 					rcvBase = firstPacket;
-				}
-
-				sendData(rcvBase);
-
-				System.out.println("<--- ACK" + rcvBase + " 송신");
-				while (true) {
-					// 데이터를 수신하기
-					firstPacket = receiveDate();
-					System.out.println("----------> 패킷 " + firstPacket + " 수신");
-
-					if (rcvBase < firstPacket) {
-						rcvBase = firstPacket;
-					}
-
-					secondPacket = receiveDate();
-					System.out.println("----------> 패킷 " + secondPacket + " 수신");
-
-					if (rcvBase < secondPacket) {
-						rcvBase = secondPacket;
-					}
-
-					sendData(rcvBase);
 					System.out.println("<--- ACK" + rcvBase + " 송신");
+
+					if (rcvBase + BUFFER_SIZE > secondPacket) {
+						rcvBase = secondPacket;
+						sendData(rcvBase);
+					} else {
+						sendData(rcvBase);
+						System.out.println("<--- ACK" + rcvBase + " 송신");
+					}
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static void sendData(int data) throws IOException {
@@ -104,3 +105,4 @@ public class ReceiverDuplication {
 		return receivedMessageInt;
 	}
 }
+

@@ -49,15 +49,16 @@ public class CongWind {
 	}
 
 	// Packet을 추가
-	public void addPacket(int number) {
+	public Packet addPacket(int number) {
 		Packet packet = new Packet(number);
 		packetList.add(packet);
+		return packet;
 	}
 
 	public boolean isAckedPacket(int number) {
 		Packet packet = packetList.stream()
 			.filter((p) -> number == p.getNumber())
-			.findFirst().get();
+			.findFirst().orElse(addPacket(number));
 
 		accumulateAck(number);
 		packet.ack();

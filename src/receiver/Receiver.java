@@ -12,10 +12,10 @@ public class Receiver {
 	private static final Integer BUFFER_SIZE = 15;
 
 	public static void main(String[] args) {
-		// 최근 보낸 ack
 		int rcvBase = 99;
-		while (true) {
-			try {
+
+		try {
+			while (true) {
 				int firstPacket = receiveDate();
 				System.out.println("----------> 패킷 " + firstPacket + " 수신");
 
@@ -34,9 +34,9 @@ public class Receiver {
 						System.out.println("<--- ACK" + rcvBase + " 송신");
 					}
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -88,3 +88,4 @@ public class Receiver {
 		return receivedMessageInt;
 	}
 }
+
