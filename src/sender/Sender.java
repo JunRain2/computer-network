@@ -12,21 +12,22 @@ public class Sender {
 
 	public static void main(String[] args) {
 		Packet packet = new Packet();
-		// 전송받은 ack
-		int ack = 100;
+		// ack 를 통해 응답된 패킷 번호
+		int ackedNum = 100;
+		// 전송된 ack
 		int receiveAck;
 
-		while (ack != 115) {
+		while (ackedNum != 115) {
 			try {
 				sendDate(packet.getNumber());
 				receiveAck = receiveDate();
 
-				if (receiveAck == ack) {
+				if (receiveAck == ackedNum) {
 					// ack 잘 옴 -> wind 증가
 					packet.increaseCongWind();
 					System.out.println(
 						"<--- ACK" + receiveAck + " 수신 =>" + "cwin 1 증가(" + packet.getCongWind() + ")");
-					ack = receiveAck;
+					ackedNum++;
 				} else {
 					// ack 잘 못 옴 -> wind 증가 안함
 					System.out.println("<--- ACK" + receiveAck + " 수신");
@@ -41,7 +42,6 @@ public class Sender {
 	}
 
 	private static int receiveDate() throws IOException {
-		int receiveAck;
 		// DatagramSocket 생성
 		DatagramSocket socket = new DatagramSocket(SENDER_PORT);
 
@@ -60,9 +60,7 @@ public class Sender {
 		// 소켓 닫기
 		socket.close();
 
-		receiveAck = Integer.parseInt(receivedMessage);
-
-		return receiveAck;
+		return Integer.parseInt(receivedMessage);
 	}
 
 	private static void sendDate(int dataToSend) throws IOException {
