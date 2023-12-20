@@ -24,10 +24,10 @@ public class Receiver {
 
 				if (rcvBase + BUFFER_SIZE > firstPacket) {
 					rcvBase = firstPacket;
-					System.out.println("<--- ACK" + rcvBase + " 송신");
 
 					if (rcvBase + BUFFER_SIZE > secondPacket) {
 						rcvBase = secondPacket;
+						System.out.println("<--- ACK" + rcvBase + " 송신");
 						sendData(rcvBase);
 					} else {
 						sendData(rcvBase);
