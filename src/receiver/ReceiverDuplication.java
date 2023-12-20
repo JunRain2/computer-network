@@ -22,7 +22,7 @@ public class ReceiverDuplication {
 			System.out.println("<--- ACK" + rcvBase + " 송신");
 
 			packet = receiveDate();
-			System.out.println("----------> 패킷 " + packet + " 수신");
+			System.out.println("----------> 패킷 " + packet + " 수신 실패");
 			sendData(rcvBase);
 			System.out.println("<--- ACK" + rcvBase + " 송신");
 
