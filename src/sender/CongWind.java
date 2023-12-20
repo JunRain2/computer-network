@@ -22,8 +22,7 @@ public class CongWind {
 	}
 
 	public void linearIncrease() {
-		size += count;
-		count++;
+		size++;
 	}
 
 	public void exponentialIncrease() {

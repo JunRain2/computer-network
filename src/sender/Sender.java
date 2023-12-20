@@ -58,7 +58,7 @@ public class Sender {
 					if (congWind.getSize() > congWind.getCriticalPoint()) {
 						congWind.linearIncrease();
 						System.out.println(
-							"<---ACK" + ack + " 수신 => cwin " + (congWind.getCount()-1) + " 증가" + "(" + congWind.getSize()
+							"<---ACK" + ack + " 수신 => cwin " + 1 + " 증가" + "(" + congWind.getSize()
 								+ ")");
 					} else if (congWind.getSize() < congWind.getCriticalPoint()) {
 						congWind.exponentialIncrease();

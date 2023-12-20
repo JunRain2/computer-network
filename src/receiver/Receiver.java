@@ -9,7 +9,7 @@ public class Receiver {
 	private static final String SENDER_HOST = "localhost";
 	private static final Integer SENDER_PORT = 8001;
 	private static final Integer RECEIVER_PORT = 8002;
-	private static final Integer BUFFER_SIZE = 15;
+	private static final Integer BUFFER_SIZE = 20;
 
 	public static void main(String[] args) {
 		int rcvBase = 99;
